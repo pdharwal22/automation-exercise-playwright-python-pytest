@@ -1,0 +1,32 @@
+# Virtual Environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Pytest
+.pytest_cache/
+
+# Allure
+allure-results/
+allure-report/
+
+# Test reports
+reports/
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+
+# Environment files
+.env
+
+# IDE
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
+
