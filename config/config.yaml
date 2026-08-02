@@ -1,0 +1,15 @@
+environments:
+  qa:
+    base_url: "https://automationexercise.com"
+  
+  default: qa
+
+browser:
+  name: chromium
+  headless: false
+  slow_mo: 0
+
+timeouts:
+  default: 10000
+  navigation: 30000
+
