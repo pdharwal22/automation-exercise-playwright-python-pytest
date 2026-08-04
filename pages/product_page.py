@@ -1,4 +1,4 @@
-from playwright.sync_api import Page
+from playwright.sync_api import Page, TimeoutError
 from pages.base_page import BasePage
 
 class ProductPage(BasePage):
@@ -21,6 +21,12 @@ class ProductPage(BasePage):
         self.product_detail_availability = self.product_detail.locator("p").filter(has_text="Availability:")
         self.product_detail_condition = self.product_detail.locator("p").filter(has_text="Condition:")
         self.product_detail_brand = self.product_detail.locator("p").filter(has_text="Brand:")
+        self.added_modal = page.get_by_text("Added!", exact=True)
+        self.product_added_message = page.get_by_text("Your product has been added to cart.", exact=True)
+        self.view_cart_link = page.get_by_text("View Cart")
+        self.continue_shopping_button = page.get_by_text("Continue Shopping")
+        self.product_quantity = page.locator("#quantity")
+        self.add_to_cart_button = page.locator("button.cart")
 
 
     def open_products_page(self):
@@ -76,4 +82,33 @@ class ProductPage(BasePage):
 
     def get_product_detail_brand(self) -> str:
         return self.product_detail_brand.inner_text()
+
+
+    def add_product_to_cart(self, product_name: str):
+        product = self.product_cards.filter(has_text=product_name).first
+        product.get_by_text("Add to cart").click()
+
+
+    def is_product_added_message_displayed(self) -> bool:
+        try:
+            self.product_added_message.wait_for(state="visible", timeout=5000)
+            return True
+        except TimeoutError:
+            return False
+
+
+    def view_cart(self):
+        self.view_cart_link.click()
+
+
+    def continue_shopping(self):
+        self.continue_shopping_button.click()
+
+
+    def set_product_quantity(self, quantity: int):
+        self.product_quantity.fill(str(quantity))
+
+
+    def add_product_from_details(self):
+        self.add_to_cart_button.click()
 
