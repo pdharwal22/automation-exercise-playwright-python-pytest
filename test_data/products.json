@@ -1,0 +1,20 @@
+{
+    "products": {
+        "Blue Top": {
+            "name": "Blue Top",
+            "price": "Rs. 500",
+            "category": "Women > Tops",
+            "availability": "In Stock",
+            "condition": "New",
+            "brand": "Polo"
+        },
+        "Men Tshirt": {
+            "name": "Men Tshirt",
+            "price": "Rs. 400",
+            "category": "Men > Tshirts",
+            "availability": "In Stock",
+            "condition": "New",
+            "brand": "H&M"
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "payment": {
+        "default": {
+            "name_on_card": "Automation User",
+            "card_number": "41111111111111111",
+            "cvc": "123",
+            "expiry_month": "12",
+            "expiry_year": "2030"
+        },
+        "visa": {},
+        "master": {},
+        "amex": {}
+    }
+}
+
