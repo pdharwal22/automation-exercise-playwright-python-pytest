@@ -3,10 +3,15 @@ from pathlib import Path
 
 class TestDataLoader:
     @staticmethod
-    def load_products():
-        file_path = Path(__file__).parent.parent/"test_data"/"products.json"
+    def load_json(file_name: str):
+        file_path = Path(__file__).parent.parent/"test_data"/file_name
         with open(file_path, "r", encoding="utf-8") as file:
-            return json.load(file)["products"]
+            return json.load(file)
+
+
+    @staticmethod
+    def load_products():
+        return TestDataLoader.load_json(file_name="products.json")["products"]
 
 
     @staticmethod
@@ -15,4 +20,17 @@ class TestDataLoader:
         if product_name not in products:
             raise ValueError(f"Product '{product_name}' not found in products.json")
         return products[product_name]
+
+
+    @staticmethod
+    def load_payment():
+        return TestDataLoader.load_json(file_name="payments.json")["payment"]
+
+
+    @staticmethod
+    def get_payment(payment: str):
+        payments = TestDataLoader.load_payment()
+        if payment not in payments:
+            raise ValueError(f"Payment details '{payment}' not found in payments.json")
+        return payments[payment]
 

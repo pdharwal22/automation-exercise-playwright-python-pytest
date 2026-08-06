@@ -11,6 +11,10 @@ class CartPage(BasePage):
         self.cart_link = page.get_by_text("Cart")
         self.cart_items = page.locator("#cart_info_table tbody tr")
         self.empty_cart_message = page.get_by_text("Cart is empty!")
+        self.proceed_to_checkout_button = page.get_by_text("Proceed To Checkout")
+        self.checkout_modal = page.get_by_role("heading", name="Checkout")
+        self.register_login_link = page.get_by_role("link", name="Register / Login")
+        self.continue_on_cart_button = page.get_by_text("Continue On Cart")
 
 
     def open_cart(self):
@@ -47,4 +51,12 @@ class CartPage(BasePage):
 
     def is_cart_empty(self) -> bool:
         return self.empty_cart_message.is_visible()
+
+
+    def proceed_to_checkout(self):
+        self.proceed_to_checkout_button.click()
+
+
+    def is_login_required_for_checkout(self) -> bool:
+        return (self.checkout_modal.is_visible() and self.register_login_link.is_visible())
 
