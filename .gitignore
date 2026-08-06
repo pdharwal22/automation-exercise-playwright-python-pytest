@@ -30,3 +30,11 @@ blob-report/
 # macOS
 .DS_Store
 
+# Allure Reports
+reports/allure-results/
+reports/allure-report/
+
+# Screenshots
+tests-results/
+playwright-report/
+
