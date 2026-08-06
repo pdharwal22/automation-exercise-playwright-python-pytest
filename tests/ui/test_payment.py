@@ -1,3 +1,4 @@
+import allure
 import pytest
 from playwright.sync_api import Page
 from pages.home_page import HomePage
@@ -10,6 +11,11 @@ from pages.order_confirmation_page import OrderConfirmationPage
 from utils.test_data_loader import TestDataLoader
 
 
+@allure.feature("Payment")
+@allure.story("Successful Payment")
+@allure.title("Verify user can complete payment successfully")
+@allure.description("Verify that a registered user can successfully complete the payment process after adding a product to the cart and proceeding through checkout.")
+@allure.severity(allure.severity_level.BLOCKER)
 @pytest.mark.ui
 @pytest.mark.regression
 def test_successful_payment(page: Page, config: dict, test_user: dict):
@@ -26,34 +32,46 @@ def test_successful_payment(page: Page, config: dict, test_user: dict):
     product_name = next(iter(TestDataLoader.load_products()))
     payment = TestDataLoader.get_payment("default")
 
-    # Login
-    home_page.open(base_url=base_url)
+    allure.dynamic.parameter("Product", product_name)
+    allure.dynamic.parameter("Payment Profile", "default")
 
-    login_page.open_login_page(base_url=base_url)
-    login_page.login(email=test_user["email"], password=test_user["password"])
+    with allure.step("Open the application"):
+        home_page.open(base_url=base_url)
 
-    # Add Product
-    product_page.open_products_page()
-    product_page.search_product(product_name=product_name)
-    product_page.add_product_to_cart(product_name=product_name)
+    with allure.step("Login with registered user"):
+        login_page.open_login_page(base_url=base_url)
+        login_page.login(email=test_user["email"], password=test_user["password"])
 
-    product_page.view_cart()
+    with allure.step(f"Search product '{product_name}'"):
+        product_page.open_products_page()
+        product_page.search_product(product_name=product_name)
 
-    # Checkout
-    cart_page.proceed_to_checkout()
-    assert checkout_page.is_checkout_page_displayed()
-    checkout_page.place_order()
+    with allure.step("Add product to cart"):
+        product_page.add_product_to_cart(product_name=product_name)
+        assert product_page.is_product_added_message_displayed()
 
-    # Payment
-    payment_page.enter_payment_details(
-        name_on_card=payment["name_on_card"],
-        card_number=payment["card_number"],
-        cvc=payment["cvc"],
-        expiry_month=payment["expiry_month"],
-        expiry_year=payment["expiry_year"]
-    )
-    payment_page.confirm_payment()
+    with allure.step("Open shopping cart"):
+        product_page.view_cart()
 
-    # Validation
-    assert order_confirmation_page.is_order_confirmed()
+    with allure.step("Proceed to checkout"):
+        cart_page.proceed_to_checkout()
+        assert checkout_page.is_checkout_page_displayed()
+
+    with allure.step("Place the order"):
+        checkout_page.place_order()
+
+    with allure.step("Enter payment details"):
+        payment_page.enter_payment_details(
+            name_on_card=payment["name_on_card"],
+            card_number=payment["card_number"],
+            cvc=payment["cvc"],
+            expiry_month=payment["expiry_month"],
+            expiry_year=payment["expiry_year"]
+        )
+
+    with allure.step("Confirm payment"):
+        payment_page.confirm_payment()
+
+    with allure.step("Verify order confirmation is displayed"):
+        assert order_confirmation_page.is_order_confirmed()
 
