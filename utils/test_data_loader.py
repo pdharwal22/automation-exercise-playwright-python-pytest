@@ -34,3 +34,13 @@ class TestDataLoader:
             raise ValueError(f"Payment details '{payment}' not found in payments.json")
         return payments[payment]
 
+
+    @staticmethod
+    def load_order():
+        return TestDataLoader.load_json(file_name="orders.json")["order"]
+
+
+    @staticmethod
+    def get_order():
+        return TestDataLoader.load_order()
+        

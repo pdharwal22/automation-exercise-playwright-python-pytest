@@ -67,7 +67,6 @@ def test_authenticated_user_can_proceed_to_checkout(page: Page, config: dict, te
 
     # Proceed to checkout
     cart_page.proceed_to_checkout()
-    checkout_page.debug_checkout_page()
     assert checkout_page.is_checkout_page_displayed()
 
 

@@ -61,7 +61,7 @@ class ProductPage(BasePage):
 
 
     def get_product_detail_name(self) -> str:
-        return self.product_detail_name.inner_text()
+        return " ".join(self.product_detail_name.inner_text().replace("\xa0"," ").split())
 
 
     def get_product_detail_price(self) -> str:
