@@ -1,4 +1,4 @@
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 from pages.base_page import BasePage
 
 class CartPage(BasePage):
@@ -47,6 +47,7 @@ class CartPage(BasePage):
     def remove_product(self, product_name: str):
         product = self.get_product(product_name)
         product.locator(".cart_quantity_delete").click()
+        expect(product).to_be_hidden()
 
 
     def is_cart_empty(self) -> bool:

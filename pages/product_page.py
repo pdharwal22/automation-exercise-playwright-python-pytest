@@ -16,7 +16,7 @@ class ProductPage(BasePage):
         self.product_cards = page.locator(".productinfo")
         self.product_detail = page.locator(".product-information")
         self.product_detail_name = self.product_detail.locator("h2")
-        self.product_detail_category = self.product_detail.locator("p").filter(has_text="Category")
+        self.product_detail_category = self.product_detail.locator("p").filter(has_text="Category:").first
         self.product_detail_price = self.product_detail.locator("span span").first
         self.product_detail_availability = self.product_detail.locator("p").filter(has_text="Availability:")
         self.product_detail_condition = self.product_detail.locator("p").filter(has_text="Condition:")
@@ -69,7 +69,7 @@ class ProductPage(BasePage):
 
 
     def get_product_detail_category(self) -> str:
-        return self.product_detail_category.inner_text()
+        return " ".join(self.product_detail_category.inner_text().replace("\xa0", " ").split())
 
 
     def get_product_detail_availability(self) -> str:
@@ -81,7 +81,7 @@ class ProductPage(BasePage):
 
 
     def get_product_detail_brand(self) -> str:
-        return self.product_detail_brand.inner_text()
+        return " ".join(self.product_detail_brand.inner_text().replace("\xa0", " ").split())
 
 
     def add_product_to_cart(self, product_name: str):
