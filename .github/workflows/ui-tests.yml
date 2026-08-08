@@ -2,8 +2,9 @@ name: UI Automation Test
 
 on:
   push:
-    - develop
-    - main
+    branches:
+      - develop
+      - main
   
   pull_request:
     branches:
