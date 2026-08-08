@@ -7,7 +7,7 @@ environments:
 browser:
   name: chromium
   headless: false
-  slow_mo: 1000
+  slow_mo: 0
 
 timeouts:
   default: 10000
