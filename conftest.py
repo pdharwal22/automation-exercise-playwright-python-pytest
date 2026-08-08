@@ -1,3 +1,4 @@
+import os
 import pytest
 from utils.config_manager import ConfigManager
 from collections.abc import Generator
@@ -29,7 +30,14 @@ def config(request):
 def browser(playwright: Playwright, config: dict) -> Browser:
     browser_name = config["browser"]["name"]
     browser_type = getattr(playwright, browser_name)
-    return browser_type.launch(headless=config["browser"]["headless"], slow_mo=config["browser"]["slow_mo"])
+    if os.getenv("CI", "").lower() == "true":
+        headless=True
+        slow_mo=0
+    else:
+        headless=config["browser"]["headless"]
+        slow_mo =config["browser"]["slow_mo"]
+
+    return browser_type.launch(headless=headless, slow_mo=slow_mo)
 
 
 @pytest.fixture
