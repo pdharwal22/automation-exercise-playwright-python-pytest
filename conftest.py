@@ -30,7 +30,7 @@ def config(request):
 def browser(playwright: Playwright, config: dict) -> Browser:
     browser_name = config["browser"]["name"]
     browser_type = getattr(playwright, browser_name)
-    if os.getenv("CI") == "true":
+    if os.getenv("CI", "").lower() == "true":
         headless=True
         slow_mo=0
     else:
