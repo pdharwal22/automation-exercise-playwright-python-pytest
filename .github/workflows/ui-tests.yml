@@ -34,10 +34,29 @@ jobs:
       - name: Install Playwright browsers
         run: | 
           playwright install --with-deps chromium
+
+      - name: Install Allure CLI
+        run: | 
+          sudo apt-get update
+          sudo apt-get install -y default-jre
+          curl -o allure.tgz -L https:..github.com/allure-framework/allure2/releases/download/2.44.0/allure-2.44.0.tgz
+          sudo tar -zxvf allure.tgz -C /opt/
+          sudo ln -s /opt/allure-2.44.0/bin/allure /usr/local/bin/allure
       
       - name: Run UI tests
         run: | 
           pytest tests/ui --alluredir=reports/allure-results
+
+      - name: Generate Allure report
+        run: | 
+          pytest tests/ui --alluredir=reports/allure-results
+
+      - name: Upload Allure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: reports/allure-report
 
       - name: Upload Allure results
         if : always()
