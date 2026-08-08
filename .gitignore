@@ -11,12 +11,13 @@ __pycache__/
 # Allure
 allure-results/
 allure-report/
-
-# Test reports
 reports/
 
-# Playwright
+# Test reports
 test-results/
+tests-results/
+
+# Playwright
 playwright-report/
 blob-report/
 
@@ -29,12 +30,4 @@ blob-report/
 
 # macOS
 .DS_Store
-
-# Allure Reports
-reports/allure-results/
-reports/allure-report/
-
-# Screenshots
-tests-results/
-playwright-report/
 
