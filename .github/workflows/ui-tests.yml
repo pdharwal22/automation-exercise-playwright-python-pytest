@@ -20,12 +20,18 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
 
       - name: Install dependencies
         run: | 
@@ -38,19 +44,19 @@ jobs:
 
       - name: Install Allure CLI
         run: | 
-          sudo apt-get update
-          sudo apt-get install -y default-jre
-          curl -o allure.tgz -L https:..github.com/allure-framework/allure2/releases/download/2.44.0/allure-2.44.0.tgz
-          sudo tar -zxvf allure.tgz -C /opt/
-          sudo ln -s /opt/allure-2.44.0/bin/allure /usr/local/bin/allure
+          curl -L -o allure.tgz https://github.com/allure-framework/allure2/releases/download/2.44.0/allure-2.44.0.tgz
+          sudo tar -xzf allure.tgz -C /opt
+          sudo ln -sf /opt/allure-2.44.0/bin/allure /usr/local/bin/allure
+          allure --version
       
       - name: Run UI tests
         run: | 
-          pytest tests/ui --alluredir=reports/allure-results
+          pytest tests/ui -v -s --alluredir=reports/allure-results
 
       - name: Generate Allure report
+        if: always()
         run: | 
-          pytest tests/ui --alluredir=reports/allure-results
+          allure generate reports/allure-results -o reports/allure-report --clean
 
       - name: Upload Allure report
         if: always()
@@ -65,4 +71,28 @@ jobs:
         with:
           name: allure-results
           path: reports/allure-results
+
+      - name: Upload test screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-screenshots
+          path: test-results/
+
+      - name: Verify Automation Exercise accessibility
+        run: | 
+          python - <<'PY'
+          import requests
+
+          url = "https://automationexercise.com"
+
+          response = requests.get(url, timeout=30)
+
+          print("Status:", response.status_code)
+          print("Final URL:", response.url)
+          print("Content-Type:", response.headers.get("content-type"))
+          print("Content-Length:", len(response.content))
+          print("First 500 characters:")
+          print(response.text[:500])
+          PY
 
