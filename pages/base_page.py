@@ -10,7 +10,13 @@ class BasePage:
 
 
     def navigate(self, url: str):
-        self.page.goto(url, wait_until="domcontentloaded")
+        response = self.page.goto(url, wait_until="domcontentloaded")
+        print(f"[PAGE URL] {self.page.url}")
+        print(f"[PAGE TITLE] {self.page.title()}")
+        if response:
+            print(f"[HTTP STATUS] {response.status}")
+
+        print(f"[PAGE CONTENT LENGTH] {len(self.page.content())}")
 
 
     def get_title(self) -> str:

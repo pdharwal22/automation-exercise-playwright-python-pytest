@@ -51,7 +51,7 @@ jobs:
       
       - name: Run UI tests
         run: | 
-          pytest tests/ui --alluredir=reports/allure-results
+          pytest tests/ui -v -s --alluredir=reports/allure-results
 
       - name: Generate Allure report
         if: always()
@@ -71,4 +71,28 @@ jobs:
         with:
           name: allure-results
           path: reports/allure-results
+
+      - name: Upload test screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-screenshots
+          path: test-results/
+
+      - name: Verify Automation Exercise accessibility
+        run: | 
+          python - <<'PY'
+          import requests
+
+          url = "https://automationexercise.com"
+
+          response = requests.get(url, timeout=30)
+
+          print("Status:", response.status_code)
+          print("Final URL:", response.url)
+          print("Content-Type:", response.headers.get("content-type"))
+          print("Content-Length:", len(response.content))
+          print("First 500 characters:")
+          print(response.text[:500])
+          PY
 
