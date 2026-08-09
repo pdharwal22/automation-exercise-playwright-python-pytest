@@ -57,7 +57,7 @@ def page(context: BrowserContext) -> Generator[Page, None, None]:
     page = context.new_page()
 
     if os.getenv("CI", "").lower() == "true":
-        page.on("console", lambda msg: print(f"[PROWSER CONSOLE] {msg.type}: {msg.tex}"))
+        page.on("console", lambda msg: print(f"[BROWSER CONSOLE] {msg.type}: {msg.text}"))
         page.on("pageerror", lambda exc: print(f"PAGE ERROR {exc}"))
 
     yield page
