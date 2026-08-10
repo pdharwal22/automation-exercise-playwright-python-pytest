@@ -2,5 +2,43 @@
     "valid_user": {
         "email": "clientuserautomation01@gmail.com",
         "password": "clientuserautomation01"
+    },
+    "invalid_user": {
+        "email": "invalid_user_automation@example.com",
+        "password": "InvalidPassword123"
+    },
+    "without_email_user": {
+        "password": "clientuserautomation01"
+    },
+    "without_password_user": {
+        "email": "clientuserautomation01@gmail.com"
+    },
+    "account_user": {
+        "name": "API Automation User",
+        "password": "Test@12345",
+        "firstname": "API",
+        "lastname": "Automation",
+        "company": "Automation Testing",
+        "address1": "Automation Street",
+        "address2": "",
+        "country": "India",
+        "state": "Punjab",
+        "city": "Ludhiana",
+        "zipcode": "141001",
+        "mobile_number": "98765433210"
+    },
+    "update_user": {
+        "name": "Updated API User",
+        "password": "Updated@12345",
+        "firstname": "Updated",
+        "lastname": "Automation",
+        "company": "Updated Automation",
+        "address1": "Updated Automation Street",
+        "address2": "",
+        "country": "India",
+        "state": "Punjab",
+        "city": "Ludhiana",
+        "zipcode": "141002",
+        "mobile_number": "9876598765"
     }
 }

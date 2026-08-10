@@ -8,6 +8,8 @@ from pages.home_page import HomePage
 from pages.signup_page import SignupPage
 from pages.account_page import AccountPage
 from pages.login_page import LoginPage
+from api.api_client import APIClient
+from utils.test_data_loader import TestDataLoader
 
 
 def pytest_addoption(parser):
@@ -113,4 +115,18 @@ def test_user(page: Page, config: dict):
 
     account_page.delete_account()
     assert account_page.is_account_deleted()
+
+
+@pytest.fixture
+def api_client(config: dict):
+    client = APIClient(base_url=config["environment_config"]["base_url"])
+
+    yield client
+
+    client.close()
+
+
+@pytest.fixture
+def users():
+    return TestDataLoader.load_json("users.json")
 
