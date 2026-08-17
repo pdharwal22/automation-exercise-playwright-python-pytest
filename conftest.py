@@ -10,6 +10,7 @@ from pages.account_page import AccountPage
 from pages.login_page import LoginPage
 from api.api_client import APIClient
 from utils.test_data_loader import TestDataLoader
+from api.services.account_service import AccountService
 
 
 def pytest_addoption(parser):
@@ -129,4 +130,9 @@ def api_client(config: dict):
 @pytest.fixture
 def users():
     return TestDataLoader.load_json("users.json")
+
+
+@pytest.fixture
+def account_service(api_client: APIClient):
+    return AccountService(api_client)
 

@@ -16,20 +16,25 @@ class APIClient:
         })
 
 
-    def get(self, endpoint: str, params: dict[str, Any] | None=None) -> requests.Response:
-        return self.session.get(url=f"{self.base_url}{endpoint}", params=params)
+    def _request(self, method: str, endpoint: str, data: dict[str, Any] | None = None, params: dict[str, Any] | None = None) -> requests.Response:
+        url = f"{self.base_url}{endpoint}"
+        return self.session.request(method=method, url=url, data=data, params=params)
 
 
-    def post(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None) -> requests.Response:
-        return self.session.post(url=f"{self.base_url}{endpoint}", data=data, params=params)
+    def get(self, endpoint: str, params: dict[str, Any] | None=None):
+        return self._request(method="GET", endpoint=endpoint, params=params)
 
 
-    def put(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None) -> requests.Response:
-        return self.session.put(url=f"{self.base_url}{endpoint}", data=data, params=params)
+    def post(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None):
+        return self._request(method="POST", endpoint=endpoint, data=data, params=params)
 
 
-    def delete(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None) -> requests.Response:
-        return self.session.delete(url=f"{self.base_url}{endpoint}", data=data, params=params)
+    def put(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None):
+        return self._request(method="PUT", endpoint=endpoint, data=data, params=params)
+
+
+    def delete(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None):
+        return self._request(method="DELETE", endpoint=endpoint, data=data, params=params)
 
 
     def close(self):
