@@ -11,6 +11,10 @@ from pages.login_page import LoginPage
 from api.api_client import APIClient
 from utils.test_data_loader import TestDataLoader
 from api.services.account_service import AccountService
+from api.services.auth_service import AuthService
+from api.services.product_service import ProductService
+from api.services.brands_service import BrandsService
+from api.endpoints import APIEndpoints
 
 
 def pytest_addoption(parser):
@@ -135,4 +139,38 @@ def users():
 @pytest.fixture
 def account_service(api_client: APIClient):
     return AccountService(api_client)
+
+
+@pytest.fixture
+def auth_service(api_client: APIClient):
+    return AuthService(api_client)
+
+
+@pytest.fixture
+def auth_user(api_client: APIClient, users: dict):
+    user = users["account_user"].copy()
+    user["email"] = generate_unique_email()
+
+    response = api_client.post(
+        APIEndpoints.CREATE_ACCOUNT,
+        data=user
+    )
+
+    assert response.status_code == 200
+    response_data = response.json()
+
+    assert response_data["responseCode"] == 201
+    assert response_data["message"] == "User created!"
+
+    return user
+
+
+@pytest.fixture
+def product_service(api_client: APIClient) -> ProductService:
+    return ProductService(api_client)
+
+
+@pytest.fixture
+def brands_service(api_client: APIClient) -> BrandsService:
+    return BrandsService(api_client)
 

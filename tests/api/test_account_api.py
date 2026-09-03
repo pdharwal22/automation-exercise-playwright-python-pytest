@@ -5,6 +5,7 @@ from api.api_client import APIClient
 from utils.test_data_generator import generate_unique_email
 from utils.test_data_loader import TestDataLoader
 from api.services.account_service import AccountService
+from utils.api_assertions import assert_api_response
 
 
 @pytest.fixture
@@ -28,14 +29,18 @@ def test_create_account(account_service: AccountService, account_user: dict):
         # response = api_client.post(APIEndpoints.CREATE_ACCOUNT, data=account_user)
         response = account_service.create_account(account_user)
 
-    with allure.step("Verify response status code"):
-        assert response.status_code == 200
+    # with allure.step("Verify response status code"):
+    #     assert response.status_code == 200
+
+    # with allure.step("Verify account creation response"):
+    #     response_data = response.json()
+    #     print(f"Create Account Response: {response_data}")
+    #     assert response_data["responseCode"] == 201
+    #     assert response_data["message"] == "User created!"
 
     with allure.step("Verify account creation response"):
-        response_data = response.json()
+        response_data = assert_api_response(response, http_status=200, response_code=201, message="User created!")
         print(f"Create Account Response: {response_data}")
-        assert response_data["responseCode"] == 201
-        assert response_data["message"] == "User created!"
 
 
 @allure.feature("Account API")
@@ -50,22 +55,26 @@ def test_get_user_details(account_service: AccountService, account_user: dict):
     with allure.step("Create account"):
         # create_response = api_client.post(APIEndpoints.CREATE_ACCOUNT, data=account_user)
         create_response = account_service.create_account(account_user)
-        assert create_response.status_code == 200
+        # assert create_response.status_code == 200
 
-        create_response_data = create_response.json()
-        assert create_response_data["responseCode"] == 201
-        assert create_response_data["message"] == "User created!"
+        # create_response_data = create_response.json()
+        # assert create_response_data["responseCode"] == 201
+        # assert create_response_data["message"] == "User created!"
+
+        assert_api_response(create_response, http_status=200, response_code=201, message="User created!")
 
     with allure.step("Get user details by email"):
         # response = api_client.get(APIEndpoints.GET_USER_DETAIL, params={"email": account_user["email"]})
         response = account_service.get_user_details(account_user["email"])
 
-    with allure.step("Verify response status code"):
-        assert response.status_code == 200
+    # with allure.step("Verify response status code"):
+    #     assert response.status_code == 200
 
     with allure.step("Verify user details"):
+        response_data = assert_api_response(response, http_status=200, response_code=200)
         response_data = response.json()
         print(f"Get User Details Response: {response_data}")
+
         assert response_data["responseCode"] == 200
         assert isinstance(response_data["user"]["id"], int)
         assert response_data["user"]["name"] == account_user["name"]
@@ -98,10 +107,11 @@ def test_user_details_with_invalid_email(account_service: AccountService):
         # response = api_client.get(APIEndpoints.GET_USER_DETAIL, params={"email": invalid_email})
         response = account_service.get_user_details(invalid_email)
 
-    with allure.step("Verify response status code"):
-        assert response.status_code == 200
+    # with allure.step("Verify response status code"):
+    #     assert response.status_code == 200
 
     with allure.step("Verify user not found response"):
+        response_data = assert_api_response(response, http_status=200, response_code=404, message="Account not found with this email, try another email!")
         response_data = response.json()
         print(f"Invalid Email Response: {response_data}")
         assert response_data["responseCode"] == 404
@@ -121,12 +131,14 @@ def test_update_account(account_service: AccountService, account_user: dict, use
     with allure.step("Create account for update"):
         # create_response = api_client.post(APIEndpoints.CREATE_ACCOUNT, data=account_user)
         create_response = account_service.create_account(account_user)
-        assert create_response.status_code == 200
+        # assert create_response.status_code == 200
 
-        create_response_data = create_response.json()
+
+        # create_response_data = create_response.json()
+        # assert create_response_data["responseCode"] == 201
+        # assert create_response_data["message"] == "User created!"
+        create_response_data = assert_api_response(create_response, http_status=200, response_code=201, message="User created!")
         print(f"Create Account Response: {create_response_data}")
-        assert create_response_data["responseCode"] == 201
-        assert create_response_data["message"] == "User created!"
 
     with allure.step("Update account details"):
         update_data = {
@@ -148,12 +160,14 @@ def test_update_account(account_service: AccountService, account_user: dict, use
         response = account_service.update_account(update_data)
 
     with allure.step("Verify update response"):
-        assert response.status_code == 200
+        # assert response.status_code == 200
 
-        response_data = response.json()
+        # response_data = response.json()
+        # assert response_data["responseCode"] == 200
+        # assert response_data["message"] == "User updated!"
+
+        response_data = assert_api_response(response, http_status=200, response_code=200, message="User updated!")
         print(f"Update Account Response: {response_data}")
-        assert response_data["responseCode"] == 200
-        assert response_data["message"] == "User updated!"
 
 
 @allure.feature("Account API")
@@ -169,11 +183,12 @@ def test_verify_updated_account_details(account_service: AccountService, account
     with allure.step("Create account"):
         # create_response = api_client.post(APIEndpoints.CREATE_ACCOUNT, data=account_user)
         create_response = account_service.create_account(account_user)
-        assert create_response.status_code == 200
+        # assert create_response.status_code == 200
 
-        create_response_data = create_response.json()
-        assert create_response_data["responseCode"] == 201
-        assert create_response_data["message"] == "User created!"
+        # create_response_data = create_response.json()
+        # assert create_response_data["responseCode"] == 201
+        # assert create_response_data["message"] == "User created!"
+        assert_api_response(create_response, http_status=200, response_code=201, message="User created!")
 
     with allure.step("Update account"):
         update_data = {
@@ -193,21 +208,23 @@ def test_verify_updated_account_details(account_service: AccountService, account
         }
         # update_response = api_client.put(APIEndpoints.UPDATE_ACCOUNT, data=update_data)
         update_response = account_service.update_account(update_data)
-        assert update_response.status_code == 200
+        # assert update_response.status_code == 200
 
-        update_response_data = update_response.json()
-        assert update_response_data["responseCode"] == 200
-        assert update_response_data["message"] == "User updated!"
+        # update_response_data = update_response.json()
+        # assert update_response_data["responseCode"] == 200
+        # assert update_response_data["message"] == "User updated!"
+        assert_api_response(update_response, http_status=200, response_code=200, message="User updated!")
 
     with allure.step("Retrieve updated account details"):
         # response = api_client.get(APIEndpoints.GET_USER_DETAIL, params={"email": account_user["email"]})
         response = account_service.get_user_details(account_user["email"])
-        assert response.status_code == 200
+        # assert response.status_code == 200
 
     with allure.step("Verify updated account details"):
-        response_data = response.json()
+        # response_data = response.json()
+        response_data = assert_api_response(response, http_status=200, response_code=200)
         print(f"Updated Account Details: {response_data}")
-        assert response_data["responseCode"] == 200
+        # assert response_data["responseCode"] == 200
 
         updated_user = response_data["user"]
         assert updated_user["name"] == update_user["name"]
@@ -233,23 +250,28 @@ def test_delete_account(account_service: AccountService, account_user: dict):
     with allure.step("Create account for deletion"):
         # create_response = api_client.post(APIEndpoints.CREATE_ACCOUNT, data=account_user)
         create_response = account_service.create_account(account_user)
-        assert create_response.status_code == 200
+        # assert create_response.status_code == 200
 
-        create_response_data = create_response.json()
+        # create_response_data = create_response.json()
+        # print(f"Create Account Response: {create_response_data}")
+        # assert create_response_data["responseCode"] == 201
+        # assert create_response_data["message"] == "User created!"
+
+        create_response_data = assert_api_response(create_response, http_status=200, response_code=201, message="User created!")
         print(f"Create Account Response: {create_response_data}")
-        assert create_response_data["responseCode"] == 201
-        assert create_response_data["message"] == "User created!"
 
     with allure.step("Delete account"):
         # delete_response = api_client.delete(APIEndpoints.DELETE_ACCOUNT, data={"email": account_user["email"], "password": account_user["password"]})
         delete_response = account_service.delete_account(email=account_user["email"], password=account_user["password"])
-        assert delete_response.status_code == 200
+        # assert delete_response.status_code == 200
 
     with allure.step("Verify delete response"):
-        delete_response_data = delete_response.json()
+        # delete_response_data = delete_response.json()
+        # print(f"Delete Account Response: {delete_response_data}")
+        # assert delete_response_data["responseCode"] == 200
+        # assert delete_response_data["message"] == "Account deleted!"
+        delete_response_data = assert_api_response(delete_response, http_status=200, response_code=200, message="Account deleted!")
         print(f"Delete Account Response: {delete_response_data}")
-        assert delete_response_data["responseCode"] == 200
-        assert delete_response_data["message"] == "Account deleted!"
 
 
 @allure.feature("Account API")
@@ -263,29 +285,36 @@ def test_verify_account_deleted(account_service: AccountService, account_user: d
     with allure.step("Create account"):
         # create_response = api_client.post(APIEndpoints.CREATE_ACCOUNT, data=account_user)
         create_response = account_service.create_account(account_user)
-        assert create_response.status_code == 200
+        # assert create_response.status_code == 200
 
-        create_response_data = create_response.json()
-        assert create_response_data["responseCode"] == 201
-        assert create_response_data["message"] == "User created!"
+        # create_response_data = create_response.json()
+        # assert create_response_data["responseCode"] == 201
+        # assert create_response_data["message"] == "User created!"
+
+        assert_api_response(create_response, http_status=200, response_code=201, message="User created!")
 
     with allure.step("Delete account"):
         # delete_response = api_client.delete(APIEndpoints.DELETE_ACCOUNT, data={"email": account_user["email"], "password": account_user["password"]})
         delete_response = account_service.delete_account(email=account_user["email"], password=account_user["password"])
-        assert delete_response.status_code == 200
+        # assert delete_response.status_code == 200
 
-        delete_response_data = delete_response.json()
-        assert delete_response_data["responseCode"] == 200
-        assert delete_response_data["message"] == "Account deleted!"
+        # delete_response_data = delete_response.json()
+        # assert delete_response_data["responseCode"] == 200
+        # assert delete_response_data["message"] == "Account deleted!"
+
+        assert_api_response(delete_response, http_status=200, response_code=200, message="Account deleted!")
 
     with allure.step("Try to retrieve deleted account"):
         # get_response = api_client.get(APIEndpoints.GET_USER_DETAIL, params={"email": account_user["email"]})
         get_response = account_service.get_user_details(account_user["email"])
-        assert get_response.status_code == 200
+        # assert get_response.status_code == 200
 
     with allure.step("Verify account no longer exists"):
-        response_data = get_response.json()
-        print(f"Deleted Account Verification Response: {response_data}")
-        assert response_data["responseCode"] == 404
-        assert response_data["message"] == "Account not found with this email, try another email!"
+        # response_data = get_response.json()
+        # print(f"Deleted Account Verification Response: {response_data}")
+        # assert response_data["responseCode"] == 404
+        # assert response_data["message"] == "Account not found with this email, try another email!"
+
+        response_data = assert_api_response(get_response, http_status=200, response_code=404, message="Account not found with this email, try another email!")
+        print(f"Delete Account Verification Response: {response_data}")
 
