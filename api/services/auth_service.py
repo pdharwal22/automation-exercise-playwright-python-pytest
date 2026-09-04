@@ -5,7 +5,7 @@ from api.endpoints import APIEndpoints
 
 class AuthService:
     """
-    Service later for Authentication API operations.
+    Service layer for Authentication API operations.
     """
     def __init__(self, api_client: APIClient):
         self.api_client = api_client

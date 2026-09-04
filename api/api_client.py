@@ -21,22 +21,22 @@ class APIClient:
         return self.session.request(method=method, url=url, data=data, params=params)
 
 
-    def get(self, endpoint: str, params: dict[str, Any] | None=None):
+    def get(self, endpoint: str, params: dict[str, Any] | None=None) -> requests.Response:
         return self._request(method="GET", endpoint=endpoint, params=params)
 
 
-    def post(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None):
+    def post(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None) -> requests.Response:
         return self._request(method="POST", endpoint=endpoint, data=data, params=params)
 
 
-    def put(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None):
+    def put(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None) -> requests.Response:
         return self._request(method="PUT", endpoint=endpoint, data=data, params=params)
 
 
-    def delete(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None):
+    def delete(self, endpoint: str, data: dict[str, Any] | None=None, params: dict[str, Any] | None=None) -> requests.Response:
         return self._request(method="DELETE", endpoint=endpoint, data=data, params=params)
 
 
-    def close(self):
+    def close(self) -> None:
         self.session.close()
 
